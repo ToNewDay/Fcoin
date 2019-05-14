@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  fcoin:
+    image: ${DOCKER_REGISTRY}fcoin
+    build:
+      context: .
+      dockerfile: fcoin/Dockerfile
