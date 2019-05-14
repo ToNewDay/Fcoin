@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FcoinUtil", "FcoinUtil\FcoinUtil.csproj", "{93D08EC8-4820-452A-BAF2-A2AC58154289}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{FDA71B17-CF2E-440D-9AAD-93ECB3C5408A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{93D08EC8-4820-452A-BAF2-A2AC58154289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93D08EC8-4820-452A-BAF2-A2AC58154289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93D08EC8-4820-452A-BAF2-A2AC58154289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA71B17-CF2E-440D-9AAD-93ECB3C5408A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA71B17-CF2E-440D-9AAD-93ECB3C5408A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA71B17-CF2E-440D-9AAD-93ECB3C5408A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA71B17-CF2E-440D-9AAD-93ECB3C5408A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

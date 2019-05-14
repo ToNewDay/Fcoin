@@ -75,10 +75,10 @@ namespace Trade
                     }
                     //计算时间戳，跳过旧行情数据
                     long tt = dt.Ticks + (long)data.ts * 10000;
-                    DateTime wsDatetime = new DateTime(tt)+TimeSpan.FromHours(8);
-                    if (DateTime.UtcNow- wsDatetime > timeSpan+ TimeSpan.FromSeconds(1))
+                    DateTime wsDatetime = new DateTime(tt);
+                    if (Math.Abs( (DateTime.UtcNow- wsDatetime).TotalSeconds) >Math.Abs( timeSpan.TotalSeconds)+ 10)
                     {
-                        Console.WriteLine("ws time old ,do nothing now: "+(DateTime.UtcNow+TimeSpan.FromHours(8)).ToString("yyyy-MM-dd HH:mm:ss")+" ws time: "+ wsDatetime.ToString("yyyy-MM-dd HH:mm:ss"));
+                        Console.WriteLine("ws time old ,do nothing now: "+(DateTime.UtcNow+TimeSpan.FromHours(8)).ToString("yyyy-MM-dd HH:mm:ss")+" ws time: "+ (wsDatetime+TimeSpan.FromHours(8)).ToString("yyyy-MM-dd HH:mm:ss"));
                         return;
                     }
 
@@ -156,7 +156,7 @@ namespace Trade
                             }
                             return;
                         }
-                        else
+                        else if (orderInfoRes.status == "0" && orderInfoRes.data.state == "submitted")
                         {
                             //若未成交且价格浮动，则取消订单
                             if (data.bids[2].Value < orderInfo.Price || orderInfo.Price < data.bids[20].Value)
@@ -183,14 +183,20 @@ namespace Trade
                         {
                             //若成交则置为完成
                             orderInfo.Completed = "1";
+                            //等待三分钟，防止追高
                             db.SaveChanges();
+                            System.Threading.Thread.Sleep(TimeSpan.FromMinutes(3));
+                            //关闭，等待自动重连
+                            webSocketUtil.close();
                             return;
                         }
-                        else
+                        else if(orderInfoRes.status == "0" && orderInfoRes.data.state == "submitted")
                         {
                             //判断损失是否超过5%，有则卖出止损
                             if (data.bids[0].Value / orderInfo.Price <0.95)
                             {
+                                //取消卖单
+
                                 Console.WriteLine("value loss , sell");
                                 double sellPrce = data.bids[0].Value / 2;
                                 MakeOrderParam makeOrderParam = new MakeOrderParam()
@@ -201,11 +207,8 @@ namespace Trade
                                     symbol = (orderInfo.SwapCur + orderInfo.BaseCur).ToLower()
                                 };
                                 Console.WriteLine("make order " + JsonConvert.SerializeObject(makeOrderParam));
-
                                 FcoinResponse<string> makerOrderResp = fcilent.MakerOrder(makeOrderParam);
                                 Console.WriteLine("make order result " + JsonConvert.SerializeObject(makerOrderResp));
-
-                                var cancleResult = fcilent.CancleOrder(orderInfo.OrderId);
                                 orderInfo.Completed = "1";
                                 db.SaveChanges();
                             }
